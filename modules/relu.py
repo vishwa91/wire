@@ -74,9 +74,10 @@ class PosEncoding(nn.Module):
 
         return coords_pos_enc.reshape(coords.shape[0], -1, self.out_dim)
     
-class PosEnc(nn.Module):
-    def __init__(self, in_features, hidden_features, hidden_layers, 
-                 out_features, nonlinearity='relu', outermost_linear=True,
+class INR(nn.Module):
+    def __init__(self, in_features,
+                 hidden_features, hidden_layers, 
+                 out_features, outermost_linear=True,
                  first_omega_0=30, hidden_omega_0=30., scale=10.0,
                  pos_encode=False, sidelength=512, fn_samples=None,
                  use_nyquist=True):
@@ -111,11 +112,6 @@ class PosEnc(nn.Module):
             final_linear = nn.Linear(hidden_features,
                                      out_features,
                                      dtype=dtype)
-            
-            if nonlinearity == 'sine':
-                with torch.no_grad():
-                    const = np.sqrt(6/hidden_features)/max(hidden_omega_0, 1e-12)
-                    final_linear.weight.uniform_(-const, const)
                         
             self.net.append(final_linear)
         else:

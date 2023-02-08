@@ -5,14 +5,6 @@
     into other modules.
 '''
 
-# System imports
-import os
-import sys
-import time
-import pickle
-import pdb
-import glob
-
 # Scientific computing
 import numpy as np
 import scipy as sp

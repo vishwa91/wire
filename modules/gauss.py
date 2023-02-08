@@ -28,9 +28,10 @@ class GaussLayer(nn.Module):
         return torch.exp(-(self.scale*self.linear(input))**2)
     
 
-class Gauss(nn.Module):
-    def __init__(self, in_features, hidden_features, hidden_layers, 
-                 out_features, nonlinearity='gauss', outermost_linear=True,
+class INR(nn.Module):
+    def __init__(self, in_features,
+                 hidden_features, hidden_layers, 
+                 out_features,outermost_linear=True,
                  first_omega_0=30, hidden_omega_0=30., scale=10.0,
                  pos_encode=False, sidelength=512, fn_samples=None,
                  use_nyquist=True):

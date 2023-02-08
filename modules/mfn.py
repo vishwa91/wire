@@ -32,17 +32,21 @@ class GaborLayer(nn.Module):
         return torch.exp(- self.gamma.unsqueeze(0) / 2. * norm) * torch.sin(self.linear(input))
 
 
-class GaborNet(nn.Module):
-    def __init__(self, in_dim=2, hidden_dim=256, out_dim=1, k=4):
-        super(GaborNet, self).__init__()
+class INR(nn.Module):
+    def __init__(self, in_features=2, hidden_features=256,
+                 hidden_layers=4, out_features=1, 
+                 outermost_linear=True, first_omega_0=0,
+                 hidden_omega_0=0, scale=1, pos_encode=False,
+                 sidelength=1, fn_samples=None, use_nyquist=None):
+        super(INR, self).__init__()
 
-        self.k = k
-        self.gabon_filters = nn.ModuleList([GaborLayer(in_dim, hidden_dim, 0, alpha=6.0 / k) for _ in range(k)])
+        self.k = hidden_layers+1
+        self.gabon_filters = nn.ModuleList([GaborLayer(in_features, hidden_features, 0, alpha=6.0 / self.k) for _ in range(self.k)])
         self.linear = nn.ModuleList(
-            [torch.nn.Linear(hidden_dim, hidden_dim) for _ in range(k - 1)] + [torch.nn.Linear(hidden_dim, out_dim)])
+            [torch.nn.Linear(hidden_features, hidden_features) for _ in range(self.k - 1)] + [torch.nn.Linear(hidden_features, out_features)])
 
-        for lin in self.linear[:k - 1]:
-            lin.weight.data.uniform_(-np.sqrt(1.0 / hidden_dim), np.sqrt(1.0 / hidden_dim))
+        for lin in self.linear[:self.k - 1]:
+            lin.weight.data.uniform_(-np.sqrt(1.0 / hidden_features), np.sqrt(1.0 / hidden_features))
 
     def forward(self, x):
 

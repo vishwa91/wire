@@ -94,39 +94,42 @@ class Wire(nn.Module):
     def __init__(self, in_features, hidden_features, hidden_layers, 
                  out_features, wavelet='gabor', omega=10.0, sigma=10.0,
                  trainable=False):
+        pass
+class INR(nn.Module):
+    def __init__(self, in_features, hidden_features, 
+                 hidden_layers, 
+                 out_features, outermost_linear=True,
+                 first_omega_0=30, hidden_omega_0=30., scale=10.0,
+                 pos_encode=False, sidelength=512, fn_samples=None,
+                 use_nyquist=True):
         super().__init__()
         
         # All results in the paper were with the default complex 'gabor' nonlinearity
-        if wavelet == 'gabor':
-            self.nonlin = ComplexGaborLayer
-            
-            # Since complex numbers are two real numbers, reduce the number of 
-            # hidden parameters by 2
-            hidden_features = int(hidden_features/np.sqrt(2))
-            dtype = torch.cfloat
-            self.complex = True
-        elif wavelet == 'realgabor':
-            self.nonlin = RealGaborLayer
-            dtype = torch.float
-            self.complex = False
-            
+        self.nonlin = ComplexGaborLayer
+        
+        # Since complex numbers are two real numbers, reduce the number of 
+        # hidden parameters by 2
+        hidden_features = int(hidden_features/np.sqrt(2))
+        dtype = torch.cfloat
+        self.complex = True
+        self.wavelet = 'gabor'    
+        
         # Legacy parameter
         self.pos_encode = False
             
         self.net = []
-        self.wavelet = wavelet
         self.net.append(self.nonlin(in_features,
                                     hidden_features, 
-                                    omega0=omega,
-                                    sigma0=sigma,
+                                    omega0=first_omega_0,
+                                    sigma0=scale,
                                     is_first=True,
-                                    trainable=trainable))
+                                    trainable=False))
 
         for i in range(hidden_layers):
             self.net.append(self.nonlin(hidden_features,
                                         hidden_features, 
-                                        omega0=omega,
-                                        sigma0=sigma))
+                                        omega0=hidden_omega_0,
+                                        sigma0=scale))
 
         final_linear = nn.Linear(hidden_features,
                                  out_features,

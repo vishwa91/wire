@@ -12,7 +12,7 @@
 Download image and occupancy examples from [here](https://www.dropbox.com/sh/qhesdb7shqa7rdt/AADQqMNCQ120VJGawX2of8nTa?dl=0). Place it in `path/to/this/folder/data/`. 
 ### Requirements
 check `requirements.txt`. This code was tested on python 3.8 in both Windows and Linux environments. Requirements file generated in Linux environment but should work similarly in a Windows environment. Memory consumption statistics work only in Linux environment.
-### Denoising images with WIRE (**coming soon**)
+### Denoising images with WIRE
 Check `wire_image_denoise.py` for denoise an image. We have included an example image  from div2k in `data/parrot.png`. 
 
 ### Representing pointclouds with WIRE (**coming soon**)
@@ -25,7 +25,7 @@ Check `wire_multi_sr.py` for performing super-resolution with multiple images ca
 Please check `wire_ct.py` for reconstructing images from computed tomographic measurements. We have included an example image `data/chest.png`.
 
 ### Information about individual files
-1. `wire_image_denoise.py` **coming soon**: Runs training script for a single image
+1. `wire_image_denoise.py` : Runs training script for a single image
 2. `wire_pointcloud.py` **coming soon**: Runs training script for a uniformly sampled occupancy of a 3D shape
 3. `wire_multi_sr.py` **coming soon**: Runs training script for solving multi-image super-resolution
 3. `wire_ct.py` **coming soon**: Runs training script for solving the computed tomography problem
@@ -36,6 +36,8 @@ Please check `wire_ct.py` for reconstructing images from computed tomographic me
 
     b. `motion.py`: Contains functions for handling multi-image super resolution data generation
 
+    c. `models.py`: Common wrapper to instantiate all INR models
+
     c. `utils.py`: Miscellaneous utilities
 
     d. `volutils.py`: Utilities for handling volume signals
@@ -44,9 +46,11 @@ Please check `wire_ct.py` for reconstructing images from computed tomographic me
 
     f. `mfn.py`: Contains multiplicative frequency networks implementation by the authors of the original paper
 
-    g. `posenc.py`: Contains positional encoding implementation
+    g. `relu.py`: Contains relu and positional encoding implementation
 
     h. `siren.py`: Contains original implementation of SIREN
+
+    i. `gauss.py`: Contains implementation of Gaussian nonlinearity
 
     
 
