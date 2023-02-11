@@ -11,42 +11,9 @@ from torch import nn
 
 import torch.nn.functional as F
 
-class RealGaborLayer(nn.Module):
+class ComplexGaborLayer2D(nn.Module):
     '''
-        Implicit representation with Gabor nonlinearity
-        
-        Inputs;
-            in_features: Input features
-            out_features; Output features
-            bias: if True, enable bias for the linear operation
-            is_first: Legacy SIREN parameter
-            omega_0: Legacy SIREN parameter
-            omega: Frequency of Gabor sinusoid term
-            scale: Scaling of Gabor Gaussian term
-    '''
-    
-    def __init__(self, in_features, out_features, bias=True,
-                 is_first=False, omega0=10.0, sigma0=10.0,
-                 trainable=False):
-        super().__init__()
-        self.omega_0 = omega0
-        self.scale_0 = sigma0
-        self.is_first = is_first
-        
-        self.in_features = in_features
-        
-        self.freqs = nn.Linear(in_features, out_features, bias=bias)
-        self.scale = nn.Linear(in_features, out_features, bias=bias)
-        
-    def forward(self, input):
-        omega = self.omega_0 * self.freqs(input)
-        scale = self.scale(input) * self.scale_0
-        
-        return torch.cos(omega)*torch.exp(-(scale**2))
-
-class ComplexGaborLayer(nn.Module):
-    '''
-        Implicit representation with complex Gabor nonlinearity
+        Implicit representation with complex Gabor nonlinearity with 2D activation function
         
         Inputs;
             in_features: Input features
@@ -82,13 +49,25 @@ class ComplexGaborLayer(nn.Module):
                                 out_features,
                                 bias=bias,
                                 dtype=dtype)
+        
+        # Second Gaussian window
+        self.scale_orth = nn.Linear(in_features,
+                                    out_features,
+                                    bias=bias,
+                                    dtype=dtype)
     
     def forward(self, input):
         lin = self.linear(input)
-        omega = self.omega_0 * lin
-        scale = self.scale_0 * lin
         
-        return torch.exp(1j*omega - scale.abs().square())
+        scale_x = lin
+        scale_y = self.scale_orth(input)
+        
+        freq_term = torch.exp(1j*self.omega_0*lin)
+        
+        arg = scale_x.abs().square() + scale_y.abs().square()
+        gauss_term = torch.exp(-self.scale_0*self.scale_0*arg)
+                
+        return freq_term*gauss_term
     
 class INR(nn.Module):
     def __init__(self, in_features, hidden_features, 
@@ -100,11 +79,11 @@ class INR(nn.Module):
         super().__init__()
         
         # All results in the paper were with the default complex 'gabor' nonlinearity
-        self.nonlin = ComplexGaborLayer
+        self.nonlin = ComplexGaborLayer2D
         
         # Since complex numbers are two real numbers, reduce the number of 
-        # hidden parameters by 2
-        hidden_features = int(hidden_features/np.sqrt(2))
+        # hidden parameters by 4
+        hidden_features = int(hidden_features/2)
         dtype = torch.cfloat
         self.complex = True
         self.wavelet = 'gabor'    

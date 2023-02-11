@@ -6,12 +6,14 @@ from . import mfn
 from . import relu
 from . import siren
 from . import wire
+from . import wire2d
 
 model_dict = {'gauss': gauss,
               'mfn': mfn,
               'relu': relu,
               'siren': siren,
-              'wire': wire}
+              'wire': wire,
+              'wire2d': wire2d}
 
 def get_INR(nonlin, in_features, hidden_features, hidden_layers,
             out_features, outermost_linear=True, first_omega_0=30,
@@ -23,7 +25,7 @@ def get_INR(nonlin, in_features, hidden_features, hidden_layers,
         
         Inputs:
             nonlin: One of 'gauss', 'mfn', 'posenc', 'siren',
-                'wire'
+                'wire', 'wire2d'
             in_features: Number of input features. 2 for image,
                 3 for volume and so on.
             hidden_features: Number of features per hidden layer
