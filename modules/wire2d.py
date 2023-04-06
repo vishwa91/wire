@@ -27,7 +27,7 @@ class ComplexGaborLayer2D(nn.Module):
     '''
     
     def __init__(self, in_features, out_features, bias=True,
-                 is_first=False, omega0=10.0, sigma0=40.0,
+                 is_first=False, omega0=10.0, sigma0=10.0,
                  trainable=False):
         super().__init__()
         self.omega_0 = omega0
