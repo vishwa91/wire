@@ -1,7 +1,7 @@
 scipy==1.6.2
 pytorch_msssim==0.2.1
 scikit_image==0.18.1
-torch==1.12.1+cu113
+torch==1.13.1
 kornia==0.6.5
 opencv_python==4.4.0.46
 matplotlib==3.3.4
@@ -10,6 +10,6 @@ PyMCubes==0.1.2
 numpy==1.20.1
 open3d==0.13.0
 pystackreg==0.2.2
-numpy==1.24.3
+numpy==1.22.0
 Pillow==9.5.0
 skimage==0.0
