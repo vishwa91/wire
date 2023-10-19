@@ -48,8 +48,8 @@ if __name__ == '__main__':
     reg_method = cv2.MOTION_EUCLIDEAN
     
     # Gabor filter constants. These settings work for SIREN, Gauss, and WIRE
-    omega0 = 5.0           # Frequency of sinusoid
-    sigma0 = 10.0           # Sigma of Gaussian
+    omega0 = 10.0           # Frequency of sinusoid
+    sigma0 = 5.0           # Sigma of Gaussian
     
     # Noise constants
     tau = 1000              # Max. photon count

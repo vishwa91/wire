@@ -24,9 +24,9 @@ from modules import models
 from modules import utils
 
 if __name__ == '__main__':
-    nonlin = 'posenc'            # type of nonlinearity, 'wire', 'siren', 'mfn', 'relu', 'posenc', 'gauss'
+    nonlin = 'wire'            # type of nonlinearity, 'wire', 'siren', 'mfn', 'relu', 'posenc', 'gauss'
     niters = 2000               # Number of SGD iterations
-    learning_rate = 1e-3        # Learning rate. 
+    learning_rate = 5e-3        # Learning rate. 
     
     # WIRE works best at 5e-3 to 2e-2, Gauss and SIREN at 1e-3 - 2e-3,
     # MFN at 1e-2 - 5e-2, and positional encoding at 5e-4 to 1e-3 
@@ -36,8 +36,8 @@ if __name__ == '__main__':
     
     # Gabor filter constants.
     # We suggest omega0 = 4 and sigma0 = 4 for denoising, and omega0=20, sigma0=30 for image representation
-    omega0 = 4.0           # Frequency of sinusoid
-    sigma0 = 4.0           # Sigma of Gaussian
+    omega0 = 5.0           # Frequency of sinusoid
+    sigma0 = 5.0           # Sigma of Gaussian
     
     # Network parameters
     hidden_layers = 2       # Number of hidden layers in the MLP
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     # Read image and scale. A scale of 0.5 for parrot image ensures that it
     # fits in a 12GB GPU
     im = utils.normalize(plt.imread('data/parrot.png').astype(np.float32), True)
-    im = cv2.resize(im, None, fx=1/4, fy=1/4, interpolation=cv2.INTER_AREA)
+    im = cv2.resize(im, None, fx=1/2, fy=1/2, interpolation=cv2.INTER_AREA)
     H, W, _ = im.shape
     
     # Create a noisy image
